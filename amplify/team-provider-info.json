@@ -10,6 +10,16 @@
             "StackName": "amplify-messageboarddemo-dev-100213",
             "StackId": "arn:aws:cloudformation:us-east-1:797354400321:stack/amplify-messageboarddemo-dev-100213/6b85dd30-e15b-11ea-aade-0e4c53e0aefd",
             "AmplifyAppId": "d1rb58a82lpdfq"
+        },
+        "categories": {
+            "auth": {
+                "messageboarddemoca5e81de": {}
+            },
+            "function": {
+                "messageboarddemoca5e81dePostConfirmation": {
+                    "GROUP": "user"
+                }
+            }
         }
     }
 }

@@ -1,0 +1,16 @@
+{
+  "trigger": true,
+  "modules": [
+    "add-to-group"
+  ],
+  "parentResource": "messageboarddemoca5e81de",
+  "functionName": "messageboarddemoca5e81dePostConfirmation",
+  "resourceName": "messageboarddemoca5e81dePostConfirmation",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/utils/../triggers/PostConfirmation",
+  "triggerTemplate": "PostConfirmation.json.ejs",
+  "roleName": "messageboarddemoca5e81dePostConfirmation",
+  "skipEdit": true,
+  "GROUP": "user"
+}

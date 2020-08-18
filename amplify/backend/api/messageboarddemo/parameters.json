@@ -1,5 +1,11 @@
 {
     "AppSyncApiName": "messageboarddemo",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
-    "DynamoDBEnableServerSideEncryption": false
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authmessageboarddemoca5e81de",
+            "Outputs.UserPoolId"
+        ]
+    }
 }
