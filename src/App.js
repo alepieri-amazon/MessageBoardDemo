@@ -37,22 +37,28 @@ const theme = createMuiTheme({
 
 function App() {
   const [user, setUser] = useState(null);
-  const [isNewUser, setIsNewUser] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
   const [initialData, setInitialData] = useState({
     messages: [],
   })
 
   React.useEffect(() => {
     Auth.currentAuthenticatedUser()
-      .then(user => setUser(user))
+      .then(user => {
+        setUser(user)
+        console.log(user)
+        if ((user.signInUserSession.accessToken.payload["cognito:groups"]).includes("admin")) {
+          setIsAdmin(true);
+        }
+      })
       .catch(() => console.log('No signed in user.'))
 
     Hub.listen('auth', data => {
       switch (data.payload.event) {
-        case 'signUp':
-          return setIsNewUser(true);
         case 'signIn':
-          console.log(isNewUser)
+          if ((user.signInUserSession.accessToken.payload["cognito:groups"]).includes("admin")) {
+            setIsAdmin(true);
+          }
           return setUser(data.payload.data);
         case 'signOut':
           return setUser(null);
@@ -65,10 +71,9 @@ function App() {
       const {
         payload: { event, data },
       } = capsule;
-      console.log(event, data)
+      // console.log(event, data)
       if (event === "ready") {
         fetchData();
-        console.log(isNewUser)
       }
     });
 
@@ -89,8 +94,8 @@ function App() {
     return (
       <ThemeProvider theme={theme}>
         <Box height='100%' display='flex' flexDirection='column' alignItems='center'>
-          <Navbar authenticatedUser={user} />
-          <MessageDisplay authenticatedUser={user} initialData={initialData} />
+          <Navbar user={user} />
+          <MessageDisplay user={user} isAdmin={isAdmin} initialData={initialData} />
         </Box>
       </ThemeProvider>
     );
@@ -98,7 +103,7 @@ function App() {
     return (
       <Box style={{display:'flex', justifyContent:'center', alignItems:'center', height:'100vh'}}>
         <AmplifyAuthenticator>
-          <AmplifySignIn headerText="Welcome to the Message Board!" slot="sign-in"></AmplifySignIn>
+          <AmplifySignIn headerText='Welcome to the Message Board!' slot='sign-in'></AmplifySignIn>
           <AmplifySignUp
             slot='sign-up'
             formFields={[

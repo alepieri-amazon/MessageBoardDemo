@@ -7,10 +7,8 @@ import { Message } from '../models';
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
-import { Button, AppBar, Toolbar, Typography, Menu, MenuItem, Box, TextField, Paper, Modal, Divider, InputAdornment } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Button, AppBar, Toolbar, Typography, Menu, MenuItem, Box, TextField, Paper, Modal, Divider } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import SearchIcon from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
 
 const theme = createMuiTheme();
@@ -54,7 +52,7 @@ function CreateMessage(props) {
 
   async function handleCreate() {
     const newMessage = new Message({
-      author: props.username,
+      owner: props.username,
       message: message,
       updatedOn: new Date().toISOString(),
     })
@@ -102,7 +100,7 @@ function CreateMessage(props) {
 export default function Navbar(props) {
   const classes = useStyles();
   
-  const username = props.authenticatedUser.username;
+  const username = props.user.username;
 
   const [showCreateMessage, setShowCreateMessage] = useState(false);
 
@@ -134,7 +132,7 @@ export default function Navbar(props) {
         onClick={handleClick}
         disableRipple={true}
         >
-          {username + "'s Profile"}
+          {username}
           <ArrowDropDownIcon />
         </Button>
         <Menu
@@ -153,62 +151,13 @@ export default function Navbar(props) {
     );
   }
 
-  function SearchBar() {
-    const [searchQuery, setSearchQuery] = useState();
-
-    const handleTextFieldChange = (e) => {
-      setSearchQuery(e.target.value)
-    }
-
-    const handleSearch = () => {
-      alert('Searched for: ' + searchQuery)
-    }
-
-    return (
-      <Box className={classes.rowFlexBox} style={{marginRight: theme.spacing(3)}}>
-        <SearchIcon onClick={handleSearch} />
-      </Box>
-    )
-  }
-
-  const userList = [
-    {username: 'alex'},
-    {usermame: 'alex2'},
-  ]
-
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 }, ]
-
   return (
     <>
       <AppBar position='static'>
         <Toolbar style={{height:'5vh'}}>
           <Typography variant='h6' style={{flexGrow:1}}>
-            {username}
+            {'Message Board'}
           </Typography>
-          <Autocomplete
-            freeSolo
-            // options={userList.map(user => user)}
-            options={top100Films.map((option) => option.title)}
-            renderInput={(params) => (
-              <TextField 
-              {...params}
-              margin="dense"
-              variant="outlined"
-              InputProps={{
-                classes: {
-                  notchedOutline: classes.notchedOutline,
-                },
-                inputMode: "numeric",
-              }}
-              />
-            )}
-          />
           <Button onClick={toggleCreateMessageModal} style={{marginRight: theme.spacing(3)}} color='inherit'>Create Message</Button>
           <UserDropDown />
         </Toolbar>

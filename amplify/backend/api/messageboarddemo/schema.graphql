@@ -1,18 +1,5 @@
-type User 
-  @model
-  @auth(
-    rules: [
-      { allow: groups, groups: ["user"], operations: [create, read, update, delete] }
-    ]
-  ) {
-  id: ID!
-  username: String!
-  messages: [Message] @connection(keyName: "byUser", fields:["id"])
-}
-
 type Message
   @model
-  @key(name: "byUser", fields: ["userID"])
   @auth(
     rules: [
       { allow: owner, operations: [create, read, update, delete] }
@@ -21,8 +8,7 @@ type Message
     ]
   ) {
   id: ID!
-  userID: ID!
-  author: String
+  owner: String
   message: String
   updatedOn: AWSDateTime
 }

@@ -6,7 +6,7 @@ import { Message } from '../models';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
-import { Typography, Menu, MenuItem, Box, TextField, InputAdornment, Input, Grid, Paper, Modal, Divider } from '@material-ui/core';
+import { Typography, Box, Grid, Paper, Divider } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const theme = createMuiTheme();
@@ -50,11 +50,12 @@ function DisplayedMessage(props) {
       <Paper className={classes.messageCard} style={{overflow: 'auto'}}>
         <Box className={classes.rowFlexBox} style={{padding:theme.spacing(1)}}>
           <Typography style={{flexGrow:1}}>{(new Date(message.updatedOn)).toDateString()}</Typography>
-          <DeleteIcon onClick={handleDeleteClick} />
-          {/* <Button style={{width:'50px'}}><DeleteIcon /></Button> */}
+          {(props.isAdmin || props.user.username === message.owner) &&
+          <DeleteIcon onClick={handleDeleteClick} />}
         </Box>
         <Divider />
-        <Typography style={{textAlign:'center', marginTop:theme.spacing(1)}}>{message.message}</Typography>
+        <Typography style={{textAlign:'center', fontWeight:'bold', marginTop:theme.spacing(1)}}>{message.owner}</Typography>
+        <Typography style={{textAlign:'center'}}>{message.message}</Typography>
       </Paper>
     </Grid>
   )
@@ -70,7 +71,10 @@ export default function MessageDisplay(props) {
   }, [props.initialData.messages])
 
   useEffect(() => {
-    const messageSubscription = DataStore.observe(Message).subscribe(message => updateMessages());
+    const messageSubscription = DataStore.observe(Message).subscribe(message => {
+      console.log(message)
+      updateMessages()
+    });
 
     return () => messageSubscription.unsubscribe();
   }, [])
@@ -87,15 +91,15 @@ export default function MessageDisplay(props) {
     return newList.splice(0,12);
   }
 
-  const handleDeleteClick = (e) => {
-    console.log(e.target, e.target.value)
-  }
-
   return (
     <Grid container spacing={3} style={{padding:theme.spacing(2), height:'100%', width:'100%'}}>
       {sortAndSplit(messageList).map(message => {
         return (
-          <DisplayedMessage message={message} />
+          <DisplayedMessage
+          user={props.user}
+          isAdmin={props.isAdmin}
+          message={message}
+          key={message.id} />
         )
       })}
     </Grid>
